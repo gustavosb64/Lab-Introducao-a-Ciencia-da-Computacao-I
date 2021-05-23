@@ -1,0 +1,9 @@
+Implemente um programa em C que leia da entrada padrão dois números inteiros positivos a e b. Em seguida realize e imprima na saída padrão em linhas separadas o resultado das seguintes operações bit a bit:
+
+a AND b
+a OR b
+a Exclusive OR b
+Complement a
+Complement b
+a Right shift 2
+b Left shift 2
