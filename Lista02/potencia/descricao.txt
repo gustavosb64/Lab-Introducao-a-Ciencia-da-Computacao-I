@@ -1,0 +1,3 @@
+Implemente um programa em C que leia duas entradas (dois números inteiros). Faça o primeiro número elevado ao segundo utilizando estruturas de repetição.
+
+Nota: não se deve utilizar funções prontas, como a pow(). Seu exercício será desconsiderado!

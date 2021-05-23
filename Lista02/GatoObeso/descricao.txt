@@ -1,0 +1,7 @@
+Um dono de um gato obeso está querendo reduzir o peso de seu gato em 30g por semana.
+Ele sabe que para correr atrás de uma bolinha o gato gasta 5g. Porém, a cada mordida no pote de ração ele ganha 3g.
+Faça um programa para saber se o gato ganhou/perdeu peso.
+O primeiro número de entrada é o número de vezes que o gato brincou com a bolinha, a segunda entrada é o número de mordidas no pote de ração na semana.
+Se o gato conseguir bater a sua meta de perder 30g, o usuário deve dar um petisco para ele como recompensa (representado pela letra “P” na saída).
+Caso o gato não tenha atingido a sua meta porém não ganhou peso, o usuário deve incentivar o gato a fazer mais exercícios jogando uma bolinha (representada pela letra “B” na saída).
+Caso o gato tenha ganho peso o usuário deve reduzir o seu acesso à comida (representado pela letra “R na saída)

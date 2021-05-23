@@ -1,0 +1,10 @@
+Um usuário está controlando o personagem em um ambiente 2D.
+Cada vez que o usuário digita 'W' o personagem se desloca uma casa para cima (+1, Coordenada Y).
+Caso a tecla “S” seja pressionada o personagem se desloca uma casa para baixo (-1, coordenada Y).
+Da mesma forma o tecla “A” faz o personagem deslocar para a esquerda (-1, coordenada X) e a tecla “D” para a esquerda (+1, coordenada X).
+
+Faça um programa para saber qual a coordenada final do personagem após as 6 entradas. Lembre-se: a coordenada Y é positiva quando o personagem vai para cima, e a coordenada X é positiva para a direita
+
+Nota: utilize uma estrutura de repetição para ler as 6 entradas e calcular o resultado.
+
+A saída deve ter dois números inteiros (coordenadas X e Y respectivamente) separados por espaço.
