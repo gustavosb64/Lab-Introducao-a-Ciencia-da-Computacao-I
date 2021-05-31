@@ -21,6 +21,7 @@ int main(int argc, char *argv[]){
                 vez += m;
             }
             cont++;
+            if (cont > n) break;
         }
         if (cont > n) break;
         for (i=0; i<k; i++){
@@ -29,6 +30,7 @@ int main(int argc, char *argv[]){
                 vez += m;
             }
             cont++;
+            if (cont > n) break;
         }
         if (cont > n) break;
         for (i=0; i<k; i++){
@@ -37,6 +39,7 @@ int main(int argc, char *argv[]){
                 vez += m;
             }
             cont++;
+            if (cont > n) break;
         }
         if (cont > n) break;
         k++;
