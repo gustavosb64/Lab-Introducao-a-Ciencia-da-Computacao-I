@@ -1,30 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SIZE 32
+#define VER_SIZE 32
+#define HOR_SIZE 65
 
-void print_walk(char **M){
-    for (int i=0; i<SIZE; i++){
-        for (int j=0; j<(SIZE*2)+1; j++){
+void print_belt(char **M){
+    for (int i=0; i<VER_SIZE; i++){
+        for (int j=0; j<HOR_SIZE; j++){
             printf("%c",M[i][j]);
         }
     }
     return;
 }
 
-int walk(char **M, int *cur_i, int *cur_j, char pre_value){
-    /*
-    printf("cur_i: %d cur_j: %d ",*cur_i, *cur_j);
-    printf("%c",M[*cur_i][*cur_j]);
-    printf("%d %d\n",M[*cur_i][*cur_j], pre_value);
-    */
+int belt(char **M, int *cur_i, int *cur_j, char pre_value){
     int check = 1;
     char cur_char;
 
     if (M[*cur_i][*cur_j] == '#'){
         cur_char = pre_value;
         check = 0;
-//        printf("cur_char: %d\n",cur_char);
     }
     else cur_char = M[*cur_i][*cur_j];
 
@@ -64,12 +59,13 @@ int walk(char **M, int *cur_i, int *cur_j, char pre_value){
 }
 
 int main(int argc, char *argv[]){
-    char **M = (char **) calloc(SIZE, sizeof(char*));
-    for(int i=0; i<SIZE; i++) M[i] = (char *) calloc((SIZE*2)+1, sizeof(char));
+
+    char **M = (char **) calloc(VER_SIZE, sizeof(char*));
+    for(int i=0; i<VER_SIZE; i++) M[i] = (char *) calloc(HOR_SIZE, sizeof(char));
 
     int start_i, start_j;
-    for (int i=0; i<SIZE; i++){
-        for (int j=0; j<(SIZE*2)+1; j++){
+    for (int i=0; i<VER_SIZE; i++){
+        for (int j=0; j<HOR_SIZE; j++){
             scanf("%c", &M[i][j]);
             if (M[i][j] == '['){
                 start_i = i;
@@ -78,31 +74,27 @@ int main(int argc, char *argv[]){
         }
     }
 
-    int cur_i = start_i; //1 element after start
-    int cur_j = start_j+2;
+    int cur_i = start_i; 
+    int cur_j = start_j+2; //1 element after start
     char cur_char = M[cur_i][cur_j];
     char pre_value = cur_char;
-    while(cur_char != ']'){
-//        printf("~cur_i: %d cur_j: %d \n",cur_i, cur_j);
-        cur_char = walk(M, &cur_i, &cur_j, pre_value);
+    while(cur_char != ']' && pre_value != -1){
+        cur_char = belt(M, &cur_i, &cur_j, pre_value);
         pre_value = cur_char;
-//        printf("cur_i:%d cur_j:%d cur_char:%d\n",cur_i,cur_j,cur_char);
         if (pre_value == -2){
             printf("Loop infinito.\n");
-            print_walk(M);
+            print_belt(M);
             return 0;
         }
         if (pre_value == -3){
             printf("Falha na esteira.\n");
-            print_walk(M);
-            return 0;
-        }
-        if (pre_value == -1){
-            printf("Ok.\n");
-            print_walk(M);
+            print_belt(M);
             return 0;
         }
     }
+
+    printf("Ok.\n");
+    print_belt(M);
 
     return 0;
 }
