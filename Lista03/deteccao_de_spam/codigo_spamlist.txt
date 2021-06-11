@@ -1,0 +1,15 @@
+**spam_list = (char **) calloc(12, sizeof(char*));
+for (int i=0; i < 12; i++) spam_list[i] = (char *) calloc(20, sizeof(char    ))  
+strcpy(spam_list[0],"gratuito");
+strcpy(spam_list[1],"atencao");
+strcpy(spam_list[2],"urgente");
+strcpy(spam_list[3],"imediato");
+strcpy(spam_list[4],"zoombie");
+strcpy(spam_list[5],"oferta");
+strcpy(spam_list[6],"dinheiro");
+strcpy(spam_list[7],"renda");
+strcpy(spam_list[8],"fundo");
+strcpy(spam_list[9],"limitado");
+strcpy(spam_list[10],"ajuda");
+strcpy(spam_list[11],"SOS");
+
