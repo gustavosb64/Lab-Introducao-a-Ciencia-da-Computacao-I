@@ -12,7 +12,7 @@ char **getSpamList(){
     strcpy(spam_list[1],"atencao");
     strcpy(spam_list[2],"urgente");
     strcpy(spam_list[3],"imediato");
-    strcpy(spam_list[4],"zoombie");
+    strcpy(spam_list[4],"zoombies");
     strcpy(spam_list[5],"oferta");
     strcpy(spam_list[6],"dinheiro");
     strcpy(spam_list[7],"renda");
@@ -24,7 +24,7 @@ char **getSpamList(){
     return spam_list;
 }
 
-char *readword(FILE *stream, int *n_char, char **spam_list) {
+char *readword(FILE *stream, int *n_char, char **spam_list, int *spam_counter) {
     char *string = 0;
     int pos = 0;
 
@@ -47,7 +47,7 @@ char *readword(FILE *stream, int *n_char, char **spam_list) {
 
                 exit(0);
             }
-           *n_char = 0;
+            *n_char = 0;
         }
         else (*n_char)++;
 
@@ -66,12 +66,16 @@ char *readword(FILE *stream, int *n_char, char **spam_list) {
     //compares string to each word in spam_list
     for(int i=0; i<12; i++){
         if (!strcmp(string, spam_list[i])){
-            printf("Spam\n");
-            for (int i=0; i < 12; i++) free(spam_list[i]);
-            free(spam_list);
-            free(string);
+            *spam_counter += 1;
+            if (*spam_counter > 1){
+                printf("Spam\n");
 
-            exit(0);
+                for (int i=0; i < 12; i++) free(spam_list[i]);
+                free(spam_list);
+                free(string);
+
+                exit(0);
+            }
         }
     }
 
@@ -82,9 +86,10 @@ int main(int argc, char *argv[]){
     int n_char = 0;
 
     char **spam_list = getSpamList();
+    int spam_counter = 0;
     char *string;
-    while(n_char <= 76 && !feof(stdin)){
-        string = readword(stdin, &n_char, spam_list);
+    while(!feof(stdin)){
+        string = readword(stdin, &n_char, spam_list, &spam_counter);
         free(string);
     }
     
