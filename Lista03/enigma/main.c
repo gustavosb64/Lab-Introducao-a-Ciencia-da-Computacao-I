@@ -37,29 +37,51 @@ int IsLetter(char c){
 
 }
 
+int *SpinRotor(int *rotor){
+
+    char first_c = rotor[0];
+    for (int i=0; i < 25; i++){
+        rotor[i] = rotor[i+1];
+    }
+    rotor[25] = first_c;
+
+    return rotor;
+}
+
 void TranscribeMessage(FILE *stream, int **rotores, int *M) {
-    char c;
-    int pos; 
-    int i = 0;
+    unsigned char c;
+    int check; 
+    int inc;
 
+    c = (char) fgetc(stream);
     do{
-        c = (char) fgetc(stream);
-        pos = IsLetter(c);
+        check = IsLetter(c);
 
-        if(pos != 0){
-            if (pos < 0){
-                c -= 97;
-                for (int j=0; j<3; j++) c = rotores[j][c];
-                c += 97;
-            }       
-            if (pos > 0){
-                c -= 65;
-                for (int j=0; j<3; j++) c = rotores[j][c];
-                c += 65;
-            }       
+        if(check != 0){
+            (check < 0) ? (inc = 97) : (inc = 65);
+            c -= inc;
+            for (int j=0; j<3; j++) c = rotores[j][c];
+            c += inc;
+
+            //Counting each spin
+            M[0] += 1;
+            rotores[0] = SpinRotor(rotores[0]);
+            if (M[0] == 26){
+
+                M[1] += 1;
+                rotores[1] = SpinRotor(rotores[1]);
+                
+                if (M[1] == 26){
+                    rotores[2] = SpinRotor(rotores[2]);
+                    M[1] = 0;
+                }
+
+                M[0] = 0;
+            }
         }
+
         printf("%c",c);
-       
+        c = (char) fgetc(stream);
     }while(!feof(stream));
 
     return;
@@ -71,6 +93,7 @@ int main(int argc, char *argv[]){
 
     //Read "Rotores:" and put in aux_string
     char *aux_string = readline(stdin);
+    free(aux_string);
 
     for (int i=0; i<3; i++){
         for (int j=0; j<26; j++){
@@ -79,30 +102,26 @@ int main(int argc, char *argv[]){
     }
 
     //Read characters before message and put in aux_string
-    for (int i=0; i<3; i++) aux_string = readline(stdin);
+    for (int i=0; i<3; i++){
+        aux_string = readline(stdin);
+        free(aux_string);
+    }
 
-    int M[3];
+    //Counter for rotors
+    int *M = (int *) malloc(2 * sizeof(int));
     M[0] = 0;
     M[1] = 0;
-    M[2] = 0;
 
     do{
         TranscribeMessage(stdin, rotores, M);
     }while(!feof(stdin));
 
-    /*
-    printf(" %s\n", message);
 
     for (int i=0; i<3; i++){
-        for (int j=0; j<26; j++){
-            printf("%d ",rotores[i][j]);
-        }
-        printf("\n");
+        free(rotores[i]);
     }
-
-    */
-
-    free(aux_string);
+    free(rotores);
+    free(M);
    
     return 0;
 }
