@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define READLINE_BUFFER 4096
 
@@ -36,25 +37,34 @@ int IsLetter(char c){
 
 }
 
-char *TranscribeMessage(FILE *stream, int **rotores) {
+void TranscribeMessage(FILE *stream, int **rotores, int *M) {
     char c;
     int pos; 
+    int i = 0;
 
     do{
         c = (char) fgetc(stream);
-
         pos = IsLetter(c);
+
         if(pos != 0){
             if (pos < 0){
-             
+                c -= 97;
+                for (int j=0; j<3; j++) c = rotores[j][c];
+                c += 97;
             }       
-            
+            if (pos > 0){
+                c -= 65;
+                for (int j=0; j<3; j++) c = rotores[j][c];
+                c += 65;
+            }       
         }
-
+        printf("%c",c);
+       
     }while(!feof(stream));
 
-    return string;
+    return;
 }
+
 int main(int argc, char *argv[]){
     int** rotores = (int **) malloc(3 * sizeof(int*));
     for (int i=0; i<3; i++) rotores[i] = (int *) malloc(26 * sizeof(int));
@@ -71,7 +81,14 @@ int main(int argc, char *argv[]){
     //Read characters before message and put in aux_string
     for (int i=0; i<3; i++) aux_string = readline(stdin);
 
-    char *message = readline(stdin); 
+    int M[3];
+    M[0] = 0;
+    M[1] = 0;
+    M[2] = 0;
+
+    do{
+        TranscribeMessage(stdin, rotores, M);
+    }while(!feof(stdin));
 
     /*
     printf(" %s\n", message);
