@@ -11,41 +11,43 @@
 
 #define LIN 32
 #define COL 64
+enum elemento{Areia = 35, Agua=126, Cimento = 64, Ar = 32};
 
+void swap(char *x, char *y);
 void PrintFrame(char **M, int idx_frame);
+//void MoveAreia(char **M, int x, int y);
+void MoveAreia(char **M, char **M_aux, int y, int x);
+void MoveAgua(char **M, int x, int y);
+char** AtualizacaoFisica(char **M);
+void FreeM(char **M);
 
 int main(int argc, char *argv[]){
 
     char **M = (char **) calloc(LIN, sizeof(char*));
     for (int i=0; i<LIN; i++){
         M[i] = (char *) calloc(COL, sizeof(char));
-        memset(M[i], 32, COL-1);
+        memset(M[i], 32, COL-1); //iniciando todas as posições com espaço (ar)
     }
 
     int n_frames;
     scanf(" %d",&n_frames);
 
-    int aux;
-    int lin, col;
+    int frame, lin, col;
+    char aux_c;
     for (int i=0; i<n_frames; i++){
-        scanf(" %d", &aux);
-        
-        getc(stdin); //lê ':' de stdin
-        getc(stdin); //lê ' ' de stdin
-        
-        scanf(" %d", &lin);
-        scanf(" %d", &col);
-
-        scanf(" %c", &M[col][lin]);
+        scanf(" %d: %d %d %c", &frame, &col, &lin, &aux_c);
+        M[lin][col] = aux_c;
+        M = AtualizacaoFisica(M);
     }
 
+    /*
     for (int i=0; i<n_frames; i++){
         PrintFrame(M, i);
     }
+    */
 
-    for(int i=0; i<LIN; i++)
-        free(M[i]);
-    free(M);
+
+    FreeM(M);
 
     return 0;
 }
@@ -57,6 +59,106 @@ void PrintFrame(char **M, int idx_frame){
         printf("%s",M[i]);
         printf("\n");
     }
+    /*
+    printf("Frame %d:",idx_frame);
+    for (int i=0;i<LIN; i++){
+        for (int j=0; j<COL; j++){
+            printf("%c",M[i][j]);
+        }
+        printf("\n");
+    }
+    */
+
+    return;
+}
+
+void swap(char *x, char *y){
+    char aux = *x;
+    *x = *y;
+    *y = aux;
+    return;
+}
+
+void MoveAreia(char **M, char **M_aux, int y, int x){
+
+    if ((y+1 <= LIN) && (M[y+1][x] == Agua || M[y+1][x] == Ar)){
+//        printf("y:%d x:%d\n",y,x);
+//        swap(&M[y+1][x], &M[y][x]);
+        swap(&M_aux[y+1][x], &M_aux[y][x]);
+        return;
+    } 
+
+    if ((y+1 <= LIN && x-1 >= 0) && (M[y+1][x-1] == Agua || M[y+1][x-1] == Ar)){
+//        swap(&M[y+1][x-1], &M[y][x]);
+        swap(&M_aux[y+1][x], &M_aux[y][x]);
+        return;
+    } 
+
+    if ((y+1 <= LIN && x+1 <= COL) && (M[y+1][x+1] == Agua || M[y+1][x+1] == Ar)){
+//        swap(&M[y+1][x+1], &M[y][x]);
+        swap(&M_aux[y+1][x], &M_aux[y][x]);
+        return;
+    } 
+
+    return;
+}
+
+void MoveAgua(char **M, int y, int x){
+
+    if ((y+1 <= LIN) && (M[y+1][x] == Ar)){
+        swap(&M[y+1][x], &M[y][x]);
+        return;
+    } 
+
+    if ((y+1 <= LIN && x-1 >= 0) && (M[y+1][x-1] == Ar)){
+        swap(&M[y+1][x-1], &M[y][x]);
+        return;
+    } 
+
+    if ((y+1 <= LIN && x+1 <= COL) && (M[y+1][x+1] == Ar)){
+        swap(&M[y+1][x+1], &M[y][x]);
+        return;
+    } 
+
+    if ((x-1 >= 0) && (M[y][x-1] == Ar)){
+        swap(&M[y][x-1], &M[y][x]);
+        return;
+    } 
+
+    if ((x+1 <= COL) && (M[y][x+1] == Ar)){
+        swap(&M[y][x+1], &M[y][x]);
+        return;
+    } 
+
+    return;
+}
+
+char** AtualizacaoFisica(char **M){
+
+    //copiando M para uma matriz auxiliar M_aux
+    char **M_aux = (char **) calloc(LIN, sizeof(char*));
+    for (int i=0; i<LIN; i++){
+        M_aux[i] = (char *) calloc(COL, sizeof(char));
+        strcpy(M_aux[i], M[i]);
+    }
+
+    for (int i=0; i<LIN; i++){
+        for (int j=0; j<COL; j++){
+            if (M[i][j] == Areia)
+                MoveAreia(M, M_aux, i, j);
+        }
+    }
+
+    FreeM(M);
+
+    return M_aux;
+}
+
+void FreeM(char **M){
+
+    for(int i=0; i<LIN; i++)
+        free(M[i]);
+    free(M);
 
     return;
 }
