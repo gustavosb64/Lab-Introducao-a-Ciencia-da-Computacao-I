@@ -32,6 +32,7 @@ int main(int argc, char *argv[]){
         M[i][COL] = 0;
     }
 
+    /*
     int n_frames;
     scanf(" %d",&n_frames);
 
@@ -47,6 +48,44 @@ int main(int argc, char *argv[]){
         PrintFrame(M, i);
         M = AtualizacaoFisica(M);
     }
+    */
+
+
+    int  n_frames, frame, x, y;
+    char nova_particula;
+
+    scanf("%d", &n_frames);
+
+    int contador = 0;
+    while (contador < n_frames) {
+
+            // `scanf` retorna EOF quando chega ao fim da entrada.
+            int n_lido = scanf(" %d: %d %d %c", &frame, &x, &y, &nova_particula);
+
+            // Se não há mais partículas a serem criadas, continue até o final
+            // da simulação.
+            if (n_lido == EOF) {
+                    frame = n_frames;
+            }
+
+            // Calcula todos os frames até o próximo frame onde queremos criar
+            // uma partícula.
+            while (contador < frame) {
+    //                printf("frame: %d\n", contador + 1);
+                    PrintFrame(M, contador+1);
+                    // Seu código de imprimir a matriz 
+                    // Seu código de calcular a física 
+                    M = AtualizacaoFisica(M);
+                    contador++;
+            }
+
+            // Se há uma particula a ser criada, crie ela.
+            if (n_lido != EOF) {
+                    M[y][x] = nova_particula;
+            }
+    }
+       
+
 
 /*    M = AtualizacaoFisica(M);
     for (int i=0; i<n_frames; i++){
@@ -177,7 +216,6 @@ char** AtualizacaoFisica(char **M){
     for (int i=0; i<LIN; i++){
         M_aux[i] = (char *) malloc((COL+1) * sizeof(char));
         strcpy(M_aux[i], M[i]);
-        M[i][COL] = 0;
     }
 
     for (int i=0; i<LIN; i++){
