@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define READLINE_BUFFER 4096
-int readword(FILE *stream, char **string) {
+char* readword(FILE *stream){
     char *new_string = 0; 
     int pos = 0; 
 
@@ -13,49 +13,61 @@ int readword(FILE *stream, char **string) {
         }
         new_string[pos] = (char) fgetc(stream);
 
-    }while(new_string[pos++] != '\n' && new_string[pos-1] != '$' && new_string[pos-1] != '\r' && new_string[pos-1] != ' ' && !feof(stream));
+    }while(new_string[pos++] != '\n' && new_string[pos-1] != '$' && new_string[pos-1] != '\r' && !feof(stream));
 
     new_string[pos-1] = 0;
     new_string = (char *) realloc(new_string, pos);
 
-    *string = new_string;
-
-    return pos;
+    return new_string;
 }
 
-void myStrcat(char *tabu, char **string){
-    char *new_word;
-    char *sentence = (char *) calloc(READLINE_BUFFER, sizeof(char));
-    int aux; 
-    char *aux_tabu;
+//função para printar frase final
+void Print(char *tabu, char *string){
 
-    do{
-        aux = readword(stdin, &new_word);
-        aux_tabu = strstr(new_word, tabu);
-        if(aux_tabu == NULL){
-            strcat(sentence,new_word);
-            strcat(sentence, " ");
-        }
-        else{
-            strcat(sentence,new_word);
-            strcat(sentence, " ");
-        }
-    }while(!feof(stdin));
+    char *new_string = (char *) calloc(READLINE_BUFFER, sizeof(char));
 
-    printf("sentence: %s\n",sentence);
+    //ptr recebe um ponteiro para a primeira ocorrência de tabu
+    char *ptr = strstr(string, tabu);
+
+    int control = 0;
+    int counter = 0;
+    while (ptr != NULL){
+        counter++;
+        
+        //delimita a string até a ocorrência de tabu
+        ptr[0] = 0;
+
+        //caso não haja memória suficiente para a concatenação, realocar
+        if (strlen(new_string) < strlen(new_string) + strlen(string))
+            new_string = (char *) realloc(new_string, strlen(new_string) + READLINE_BUFFER);
+
+        //concatena string com novo delimitador em new_string
+        strcat(new_string, string);
+
+        //reposiciona o início da string após a ocorrência de tabu
+        control = strlen(string) + strlen(tabu);
+        string += control;
+
+        ptr = strstr(string, tabu);
+    }
+    strcat(new_string, string);
+
+    printf("A palavra tabu foi encontrada %d vezes\n", counter);
+    printf("Frase: %s",new_string);
+
+    free(new_string);
 
     return;
 }
 
 int main(int argc, char *argv[]){
 
-    //lendo palavra tabu e frase
-    char *tabu;
-    readword(stdin, &tabu);
-    printf("tabu: %s\n",tabu);
-    char *string;
-    readword(stdin, &string);
-    myStrcat(tabu, &string);
+    //lê palavra tabu e frase
+    char *tabu, *string;
+    tabu = readword(stdin);
+    string = readword(stdin);
+
+    Print(tabu, string);
 
     free(tabu);
     free(string);
